@@ -12,15 +12,13 @@ func showIndexPage(c *gin.Context) {
 	// Get articles from the store
 	articles := getAllArticles()
 
-	c.HTML(
-		http.StatusOK,
-		// Use the index.html template
-		"index.html",
-		// Pass the data that the page uses
+	render(
+		c,
 		gin.H{
 			"title":   "Home Page",
 			"payload": articles,
 		},
+		"index.html",
 	)
 }
 
@@ -40,12 +38,27 @@ func getArticle(c *gin.Context) {
 		return
 	}
 
-	c.HTML(
-		http.StatusOK,
-		"article.html",
+	render(
+		c,
 		gin.H{
 			"title":   "Article 1",
 			"payload": article,
 		},
+		"article.html",
 	)
+}
+
+// render function based on 'Accept' header
+func render(c *gin.Context, data gin.H, templateName string) {
+	switch c.Request.Header.Get("Accept") {
+	case "application/json":
+		// JSON Response
+		c.JSON(http.StatusOK, data["payload"])
+	case "application/xml":
+		// XML Response
+		c.XML(http.StatusOK, data["payload"])
+	default:
+		// HTML Response with template
+		c.HTML(http.StatusOK, templateName, data)
+	}
 }
