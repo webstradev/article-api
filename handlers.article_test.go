@@ -30,13 +30,3 @@ func TestShowIndexPageUnauthenticated(t *testing.T) {
 		return statusOK && pageOK
 	})
 }
-
-// This function is used to store the main lists into the temporary one
-func saveLists() {
-	tmpArticleList = articleList
-}
-
-// This function is used to restore the main lists from the temporary one
-func restoreLists() {
-	articleList = tmpArticleList
-}
